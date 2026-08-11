@@ -1,113 +1,132 @@
 "use client";
-import { useEffect, useRef, useState, useCallback } from "react";
-import SVGDefs from "@/components/SVGDefs";
-import BackgroundEffects from "@/components/BackgroundEffects";
-import MainBreaker from "@/components/MainBreaker";
-import Header from "@/components/Header";
-import CaseFileCards from "@/components/CaseFileCards";
-import ProjectsList from "@/components/ProjectsList";
-import ContactSection from "@/components/ContactSection";
-import SmokeParticles from "@/components/SmokeParticles";
-import FooterTicker from "@/components/FooterTicker";
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [lightsOn, setLightsOn] = useState(true);
-  const [mouse, setMouse] = useState({ x: -999, y: -999 });
-  const flashlightRef = useRef<HTMLDivElement>(null);
+  const [seconds, setSeconds] = useState(3);
+  const phone = "919306018924";
+  const text = encodeURIComponent("Hey Rao Jatin, I need a website for my business.");
+  const url = `https://wa.me/${phone}?text=${text}`;
 
-  // Dynamic shadow tracking based on mouse position
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      // Paper shadow
-      const cx = window.innerWidth / 2;
-      const cy = window.innerHeight / 2;
-      const dx = ((e.clientX - cx) / cx) * 8;
-      const dy = ((e.clientY - cy) / cy) * 8;
-      document.documentElement.style.setProperty("--shadow-x", `${dx}px`);
-      document.documentElement.style.setProperty("--shadow-y", `${Math.abs(dy) + 5}px`);
+    const timer = setInterval(() => {
+      setSeconds((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          window.location.href = url;
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
 
-      // Flashlight position — use requestAnimationFrame for smoothness
-      setMouse({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
-
-  // Update flashlight overlay gradient directly via DOM for max perf
-  useEffect(() => {
-    if (!flashlightRef.current) return;
-    if (!lightsOn) {
-      flashlightRef.current.style.background = `
-        radial-gradient(
-          circle 230px at ${mouse.x}px ${mouse.y}px,
-          rgba(255, 220, 140, 0.30) 0%,
-          rgba(200, 160, 80, 0.12) 60%,
-          rgba(0, 0, 0, 0.97) 100%
-        )
-      `;
-    }
-  }, [mouse, lightsOn]);
-
-  const handleToggle = useCallback(() => {
-    setLightsOn((prev) => !prev);
-  }, []);
+    return () => clearInterval(timer);
+  }, [url]);
 
   return (
     <div
-      ref={containerRef}
-      className="min-h-screen font-sans relative overflow-x-clip transition-colors duration-1000 bg-[#8c6b4a]"
-      style={{ "--shadow-x": "0px", "--shadow-y": "5px" } as React.CSSProperties}
+      style={{
+        fontFamily:
+          '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif',
+        backgroundColor: "#f1f5f9",
+        color: "#334155",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "100vh",
+        margin: 0,
+        padding: "20px",
+        boxSizing: "border-box",
+      }}
     >
-      {/* Global SVG defs */}
-      <SVGDefs />
-
-      {/* Background layers */}
-      <BackgroundEffects />
-
-      {/* ── BLACKOUT / FLASHLIGHT OVERLAY ── */}
       <div
-        ref={flashlightRef}
-        className="fixed inset-0 pointer-events-none z-[9980] transition-opacity duration-700"
         style={{
-          opacity: lightsOn ? 0 : 1,
-          background: lightsOn
-            ? "transparent"
-            : `radial-gradient(
-                circle 230px at ${mouse.x}px ${mouse.y}px,
-                rgba(255, 220, 140, 0.30) 0%,
-                rgba(200, 160, 80, 0.12) 60%,
-                rgba(0, 0, 0, 0.97) 100%
-              )`,
+          background: "#ffffff",
+          padding: "40px 32px",
+          borderRadius: "8px",
+          boxShadow:
+            "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+          maxWidth: "460px",
+          width: "100%",
+          textAlign: "center",
+          borderTop: "4px solid #25D366",
         }}
-      />
+      >
+        <h2
+          style={{
+            marginTop: 0,
+            color: "#0f172a",
+            fontSize: "22px",
+            fontWeight: 600,
+            marginBottom: "12px",
+          }}
+        >
+          Wait, we are redirecting you...
+        </h2>
+        <p
+          style={{
+            fontSize: "15px",
+            lineHeight: 1.6,
+            color: "#475569",
+            marginBottom: "20px",
+          }}
+        >
+          Connecting you directly to <strong>Rao Jatin</strong> on WhatsApp.
+        </p>
 
-      {/* Extra full-black layer that fades in behind flashlight for dramatic effect */}
-      <div
-        className="fixed inset-0 pointer-events-none z-[9970] bg-black transition-opacity duration-700"
-        style={{ opacity: lightsOn ? 0 : 0.92 }}
-      />
+        <div
+          style={{
+            backgroundColor: "#f8fafc",
+            border: "1px solid #e2e8f0",
+            padding: "12px 16px",
+            borderRadius: "6px",
+            fontSize: "14px",
+            color: "#1e293b",
+            marginBottom: "24px",
+            textAlign: "left",
+          }}
+        >
+          <strong
+            style={{
+              display: "block",
+              color: "#64748b",
+              fontSize: "12px",
+              textTransform: "uppercase",
+              marginBottom: "4px",
+              letterSpacing: "0.5px",
+            }}
+          >
+            Pre-filled Message:
+          </strong>
+          &quot;Hey Rao Jatin, I need a website for my business.&quot;
+        </div>
 
-      {/* Fixed UI — always on top of blackout */}
-      <MainBreaker isOn={lightsOn} onToggle={handleToggle} />
+        <a
+          href={url}
+          style={{
+            display: "inline-block",
+            backgroundColor: "#25D366",
+            color: "#ffffff",
+            padding: "12px 24px",
+            textDecoration: "none",
+            borderRadius: "6px",
+            fontWeight: 600,
+            fontSize: "15px",
+          }}
+        >
+          Click Here to Open WhatsApp
+        </a>
 
-      {/* SVG wire overlay (decorative) */}
-      <div className="absolute inset-0 pointer-events-none z-[55] overflow-visible" style={{ minHeight: "100vh" }}>
-        <svg className="w-full h-full overflow-visible" />
+        <p
+          style={{
+            fontSize: "13px",
+            color: "#94a3b8",
+            marginTop: "20px",
+            marginBottom: 0,
+          }}
+        >
+          Redirecting automatically in {seconds} seconds...
+        </p>
       </div>
-
-      {/* Main content */}
-      <div className="px-4 md:px-16 pt-16 lg:pt-24 pb-16 text-[#111]">
-        <Header />
-        <main className="max-w-[1250px] 2xl:max-w-[1400px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-x-12 gap-y-16 relative z-30 font-serif px-4 md:px-8">
-          <CaseFileCards />
-          <ProjectsList />
-        </main>
-      </div>
-
-      <ContactSection />
-      <SmokeParticles />
-      <FooterTicker />
     </div>
   );
 }
